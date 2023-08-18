@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Movies - MovieWeb App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="return-home-button">
+            <a href="/">Return Home</a>
+        </div>
+        <h1>User Movies</h1>
+        <ul class="movie-grid">
+            {% for movie in movies %}
+                <li class="movie-item">
+                    <div class="clickable">
+                        <a href="{{ url_for('movie_detail', user_id=user_id, movie_id=movie.movie_id) }}">
+                            <img class="movie-poster" src="{{ movie.poster }}" alt="{{ movie.title }} Poster">
+                            <h3 class="movie-title">{{ movie.title }}</h3>
+                        </a>
+                    </div>
+                    <div class="movie-details">
+                        <p class="movie-info">{{ movie.director }} | {{ movie.year }} | {{ movie.rating }}</p>
+                    </div>
+                    <div class="movie-actions">
+                        <button onclick="location.href='/users/{{ user_id }}/update_movie/{{ movie.movie_id }}'">Update Movie</button>
+                        <button onclick="location.href='/users/{{ user_id }}/delete_movie/{{ movie.movie_id }}'">Delete Movie</button>
+                        <button onclick="confirmRedirect('https://movie-web.app/search/movie/{{ movie.title }}')">Watch Movie</button>
+                        <a class="button-link" href="{{ url_for('add_review', user_id=user_id, movie_id=movie.movie_id) }}">Add Review</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="add-movie-button">
+            <button onclick="location.href='/users/{{ user_id }}/add_movie'">Add Movie</button>
+            <button onclick="location.href='{{ url_for('recommend_movie', user_id=user_id) }}'">Recommend Me</button>
+        </div>
+    </div>
+
+    <script>
+        function confirmRedirect(url) {
+            var confirmed = confirm("You will be redirected to a third-party page to watch this movie. Do you want to proceed?");
+            if (confirmed) {
+                window.open(url, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>

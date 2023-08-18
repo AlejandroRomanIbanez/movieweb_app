@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Movie - MovieWeb App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="return-home-button">
+            <a href="/users">Return Home</a>
+        </div>
+        <h1 class="page-title">Add Movie</h1>
+        <form action="/users/{{ user_id }}/add_movie" method="POST" class="form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add Movie" class="btn-submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

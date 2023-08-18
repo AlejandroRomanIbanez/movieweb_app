@@ -1,0 +1,114 @@
+{
+    "1": {
+        "name": "Alex",
+        "password": "pass",
+        "movies": [
+            {
+                "movie_id": "1_1689246388",
+                "title": "Scream 4",
+                "director": "Wes Craven",
+                "year": 2011,
+                "rating": 8.9,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMTk5OTcxNTUyNF5BMl5BanBnXkFtZTcwMDczMzE0NA@@._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "1_1689250292",
+                "title": "Scream",
+                "director": "Wes Craven",
+                "year": 1996,
+                "rating": 7.4,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjA2NjU5MTg5OF5BMl5BanBnXkFtZTgwOTkyMzQxMDE@._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "1_1689258600",
+                "title": "Scream 2",
+                "director": "Wes Craven",
+                "year": 1997,
+                "rating": 6.3,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMTIxNTMzNzYtNzA3NC00MzgwLTlhNGYtMDEyYTNlZjcwZTNiXkEyXkFqcGdeQXVyNDAxNjkxNjQ@._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "1_1689550101",
+                "title": "Scream 3",
+                "director": "Wes Craven",
+                "year": 2000,
+                "rating": 5.6,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMDljNmI1YzctNjJlZC00NzZlLWFlZTgtMDE4MjJiMDk0ZGY4XkEyXkFqcGdeQXVyMjg3MDQ0Mjk@._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "1_1689607462",
+                "title": "Her",
+                "director": "Spike Jonze",
+                "year": 2013,
+                "rating": 8.0,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjA1Nzk0OTM2OF5BMl5BanBnXkFtZTgwNjU2NjEwMDE@._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "1_1689679927",
+                "title": "Batman",
+                "director": "Tim Burton",
+                "year": 1989,
+                "rating": 7.5,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "1_1691760327",
+                "title": "Avatar",
+                "director": "James Cameron",
+                "year": 2009,
+                "rating": 7.9,
+                "poster": "https://m.media-amazon.com/images/M/MV5BZDA0OGQxNTItMDZkMC00N2UyLTg3MzMtYTJmNjg3Nzk5MzRiXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_SX300.jpg"
+            }
+        ]
+    },
+    "2": {
+        "name": "Laura",
+        "password": "pass2",
+        "movies": [
+            {
+                "movie_id": "2_1689595026",
+                "title": "Scream",
+                "director": "Wes Craven",
+                "year": 1996,
+                "rating": 7.4,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjA2NjU5MTg5OF5BMl5BanBnXkFtZTgwOTkyMzQxMDE@._V1_SX300.jpg"
+            },
+            {
+                "movie_id": "2_1689680702",
+                "title": "Scream 3",
+                "director": "Wes Craven",
+                "year": 2000,
+                "rating": 7.8,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMDljNmI1YzctNjJlZC00NzZlLWFlZTgtMDE4MjJiMDk0ZGY4XkEyXkFqcGdeQXVyMjg3MDQ0Mjk@._V1_SX300.jpg"
+            }
+        ]
+    },
+    "3": {
+        "name": "one",
+        "password": "two",
+        "movies": [
+            {
+                "movie_id": "3_1689600775",
+                "title": "Scream",
+                "director": "Wes Craven",
+                "year": 1996,
+                "rating": 7.4,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjA2NjU5MTg5OF5BMl5BanBnXkFtZTgwOTkyMzQxMDE@._V1_SX300.jpg"
+            }
+        ]
+    },
+    "4": {
+        "name": "test",
+        "password": "test",
+        "movies": [
+            {
+                "movie_id": "4_1689680745",
+                "title": "Scream",
+                "director": "Wes Craven",
+                "year": 1996,
+                "rating": 7.4,
+                "poster": "https://m.media-amazon.com/images/M/MV5BMjA2NjU5MTg5OF5BMl5BanBnXkFtZTgwOTkyMzQxMDE@._V1_SX300.jpg"
+            }
+        ]
+    }
+}

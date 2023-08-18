@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Movie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="return-home-button">
+            <a href="/">Return Home</a>
+        </div>
+        <div class="movie-details">
+            <div class="movie-poster">
+                <img src="{{ movie['Poster'] }}" alt="{{ movie['Title'] }} Poster">
+            </div>
+            <div class="movie-info">
+                <h1>{{ movie['Title'] }}</h1>
+                <p class="movie-subinfo"><strong>Director:</strong> {{ movie['Director'] }}</p>
+                <p class="movie-subinfo"><strong>Year:</strong> {{ movie['Year'] }}</p>
+                <p class="movie-subinfo"><strong>Rating:</strong> {{ movie['imdbRating'] }}</p>
+                <p class="movie-description">{{ movie.get('Plot', '') }}</p>
+                <div class="movie-actions">
+                    <button onclick="location.href='/users/{{ user.user_id }}/recommend_movie'">Recommend Another Movie</button>
+                </div>
+            </div>
+        </div>
+        <div class="return-home-button">
+            <a href="{{ url_for('user_movies', user_id=user.user_id) }}">Back to Your Movies</a>
+        </div>
+
+
+    </div>
+</body>
+</html>

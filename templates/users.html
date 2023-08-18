@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users - MovieWeb App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/assets/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="return-home-button">
+            <a href="/">Return Home</a>
+        </div>
+        <h1>Users</h1>
+        <ul class="user-grid">
+            {% for user in users %}
+                <li class="user-item">
+                    <div class="user-details">
+                        <a href="/users/{{ loop.index }}/movies" class="user-name">{{ user }}</a>
+                    </div>
+                    <div class="user-actions">
+                        <form class="login-form" action="/users/{{ loop.index }}" method="post">
+                            <input type="password" name="password" placeholder="Password" required>
+                            <button type="submit">Login</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="add-user-button">
+            <button onclick="location.href='/add_user'">Add User</button>
+        </div>
+    </div>
+</body>
+</html>

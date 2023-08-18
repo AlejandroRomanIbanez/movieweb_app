@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Review - MovieWeb App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="return-home-button">
+            <a href="/">Return Home</a>
+        </div>
+        <div class="return-home-button">
+            <a href="{{ url_for('user_reviews', user_id=user_id) }}">Return Home</a>
+        </div>
+        <h1 class="page-title">Delete Review</h1>
+        <form method="POST" action="{{ url_for('delete_review', user_id=user_id, review_id=review_id) }}" class="form">
+            <p>Are you sure you want to delete this review?</p>
+            <div class="form-group">
+                <input type="submit" value="Delete" class="btn-submit">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

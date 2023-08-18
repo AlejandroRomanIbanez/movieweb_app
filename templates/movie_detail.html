@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="return-home-button">
+            <a href="/">Return Home</a>
+        </div>
+        <div class="movie-details">
+            <div class="movie-poster">
+                <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster">
+            </div>
+            <div class="movie-info">
+                <h1>{{ movie.title }}</h1>
+                <p class="movie-subinfo"><strong>Director:</strong> {{ movie.director }}</p>
+                <p class="movie-subinfo"><strong>Year:</strong> {{ movie.year }}</p>
+                <p class="movie-description">{{ movie.description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="review-container">
+            <h2>Reviews:</h2>
+            <div class="black-box">
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class="review">
+                            <p class="review-user"><strong>{{ all_users[review.user_id - 1] }}</strong> rated this movie:</p>
+                            <p class="review-rating">{{ review.user_rating }}/10</p>
+                            <p class="review-text">{{ review.review_text }}</p>
+                            {% if user.user_id == review.user_id %}
+                                <form method="POST" action="{{ url_for('delete_review', user_id=user.user_id, review_id=review.review_id) }}">
+                                    <input type="submit" value="Delete" class="movie-actions button">
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                <p>No reviews available for this movie. Be the first to review this movie!</p>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="flash-messages">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-box">
+                <div class="flash-message">{{ messages[-1] }}</div>
+            </div>
+        {% endif %}
+    {% endwith %}
+</div>
+
+</body>
+</html>
