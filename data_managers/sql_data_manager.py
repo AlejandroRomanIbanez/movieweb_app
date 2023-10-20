@@ -1,30 +1,51 @@
-from flask_sqlalchemy import SQLAlchemy
 from movieweb_app.data_managers.data_manager_interface import DataManagerInterface
 from movieweb_app.data_models.data_models import db
 from movieweb_app.data_models.data_models import User, Movie, Review
+from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 import random
 import re
 
+
 class SQLiteDataManager(DataManagerInterface):
     def __init__(self, database_path):
         self.db = db
-        self.api_key = "your_api_here"
+        self.api_key = "Your API here"
         self.request_url = "http://www.omdbapi.com/?apikey={}&t=".format(self.api_key)
+
+    def update_user_profile(self, user_id, new_name, new_password, profile_picture=None):
+        user = self.db.session.query(User).get(user_id)
+        if user:
+            if new_name:
+                user.name = new_name
+            if new_password:
+                user.password = generate_password_hash(new_password)
+            if profile_picture:
+                user.profile_picture = profile_picture
+            self.db.session.commit()
 
     def get_most_popular_movies(self):
         url = "https://google-bard1.p.rapidapi.com/"
         headers = {
-            "text": "Most 10 popular movies of this week?, Delivered to me like a JSON with title as key and the title of the movie as value",
-            "X-RapidAPI-Key": "your_api_here",
-            "X-RapidAPI-Host": "google-bard1.p.rapidapi.com"
+            "text": "Most 10 popular movies of this week?Just write the titles like this: 1.Batman, 2.Scream (until 10)",
+            "X-RapidAPI-Key": "f726431416msha6f0de09bfdd521p189888jsna09e839b1fd1",
+            "X-RapidAPI-Host": "google-bard1.p.rapidapi.com",
+            "psid": "Your PSID here"
         }
         response = requests.get(url, headers=headers)
-        if response.status_code == 201:
-            response_data = response.json()
-            popular_movies = re.findall(r'"title": "([^"]+)"', response_data['response'])
-            print(popular_movies)
-            return popular_movies
+        if response.status_code == 200:
+            try:
+                response_data = response.json()
+                popular_movies = re.findall(r'\d+\.\s+(.+)', response_data['response'])
+                print(popular_movies)
+                if popular_movies:
+                    return popular_movies
+                else:
+                    print("No popular movies found in the response.")
+                    return None
+            except Exception as e:
+                print("Error occurred while parsing JSON response:", str(e))
+                return None
         else:
             print("Error ocurred while fetching most popular movies")
 
@@ -41,7 +62,7 @@ class SQLiteDataManager(DataManagerInterface):
         if user:
             review = self.db.session.query(Review).get(review_id)
             if review:
-                if str(review.user.user_id) == user_id:
+                if review.user.user_id == user_id:
                     self.db.session.delete(review)
                     self.db.session.commit()
                     print("Review deleted successfully.")
@@ -77,11 +98,16 @@ class SQLiteDataManager(DataManagerInterface):
         """
         user_ids = self.get_all_users_id()
         new_id = max(user_ids) + 1 if user_ids else 1
-        new_user = User(user_id=new_id, name=username, password=password)
+        hashed_password = generate_password_hash(password)
+        new_user = User(user_id=new_id, name=username, password=hashed_password)
         self.db.session.add(new_user)
         self.db.session.commit()
 
-    def check_user_password(self, user_id, password):
+    def find_user_by_name(self, name):
+        user = self.db.session.query(User).filter_by(name=name).first()
+        return user
+
+    def check_user_password(self, username, password):
         """
         Checks if the provided password matches the user's password.
         Args:
@@ -90,8 +116,8 @@ class SQLiteDataManager(DataManagerInterface):
         Returns:
             bool: True if the password matches, False otherwise.
         """
-        user = self.find_user_by_id(user_id)
-        if user and user.password == password:
+        user = self.find_user_by_name(username)
+        if user and check_password_hash(user.password, password):
             return True
         return False
 
@@ -105,6 +131,7 @@ class SQLiteDataManager(DataManagerInterface):
         """
         user = self.db.session.query(User).get(user_id)
         return user
+
 
     def get_all_users_id(self):
         """
@@ -159,11 +186,35 @@ class SQLiteDataManager(DataManagerInterface):
                 if movie_info is None:
                     print("This movie doesn't exist. Make sure you write it correctly.")
                     return
+                imdb_rating = movie_info.get('imdbRating')
+                alternative_rating = movie_info.get('Ratings', [])
+
+                if imdb_rating and imdb_rating != "N/A":
+                    try:
+                        imdb_rating = float(imdb_rating)
+                    except ValueError:
+                        imdb_rating = "N/A"
+                else:
+                    imdb_rating = "N/A"
+
+                # If IMDb rating is "N/A" and an alternative rating source is available, try to use it
+                if imdb_rating == "N/A":
+                    for rating_entry in alternative_rating:
+                        if 'Internet Movie Database' in rating_entry.get('Source', ''):
+                            alternative_imdb_rating = rating_entry.get('Value', '').strip()
+                            if alternative_imdb_rating:
+                                try:
+                                    imdb_rating = float(alternative_imdb_rating)
+                                    break  # Stop searching for alternative ratings if one is found
+                                except Exception as e:
+                                    print("Error: {e}")
+                    else:
+                        imdb_rating = "N/A"
                 new_movie = Movie(
                     title=movie_info['Title'],
                     director=movie_info['Director'],
                     year=int(movie_info['Year']),
-                    rating=float(movie_info['imdbRating']),
+                    rating=imdb_rating,
                     poster=movie_info['Poster'],
                     description=movie_info.get('Plot', '')
                 )

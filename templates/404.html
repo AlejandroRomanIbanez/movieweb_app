@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}" />
-    <title>Not Found</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}404 - MovieWeb App{% endblock %}
+
+{% block content %}
     <h1>{{ error }}</h1>
     <a href="/" class="update-button">Click to return Home</a>
-</body>
-</html>
+{% endblock %}

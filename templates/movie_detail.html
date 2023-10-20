@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Movie Details</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Movie Detail - MovieWeb App{% endblock %}
+
+{% block content %}
     <div class="container">
-        <div class="return-home-button">
-            <a href="/">Return Home</a>
+        <div>
+            <a class="btn btn-warning text-decoration-none" href="{{ url_for('user_movies', user_id=user.user_id )}}">My Movies</a>
         </div>
         <div class="movie-details">
             <div class="movie-poster">
@@ -30,6 +27,7 @@
                 {% if reviews %}
                     {% for review in reviews %}
                         <div class="review">
+                            <img class="bd-placeholder-img img-thumbnail rounded-circle" width="50" height="50" src="{{ url_for('static', filename='images/' ~ user.profile_picture) }}" alt="Profile Picture">
                             <p class="review-user"><strong>{{ all_users[review.user_id - 1] }}</strong> rated this movie:</p>
                             <p class="review-rating">{{ review.user_rating }}/10</p>
                             <p class="review-text">{{ review.review_text }}</p>
@@ -56,6 +54,4 @@
         {% endif %}
     {% endwith %}
 </div>
-
-</body>
-</html>
+{% endblock %}

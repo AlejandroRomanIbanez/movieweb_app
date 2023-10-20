@@ -1,41 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Movies - MovieWeb App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}User Movies - MovieWeb App{% endblock %}
+
+{% block content %}
     <div class="container">
-        <div class="return-home-button">
-            <a href="/">Return Home</a>
-        </div>
         <h1>User Movies</h1>
+        <p><a href="{{ url_for('user_profile', user_id=user_id) }}" class="btn btn-info text-decoration-none">Go to My Profile</a></p>
         <ul class="movie-grid">
             {% for movie in movies %}
                 <li class="movie-item">
-                    <div class="clickable">
-                        <a href="{{ url_for('movie_detail', user_id=user_id, movie_id=movie.movie_id) }}">
+                    <div class="mb-2">
+                        <a class="text-decoration-none text-white" href="{{ url_for('movie_detail', user_id=user_id, movie_id=movie.movie_id) }}">
                             <img class="movie-poster" src="{{ movie.poster }}" alt="{{ movie.title }} Poster">
-                            <h3 class="movie-title">{{ movie.title }}</h3>
+                            <h3 class="--bs-light-text-emphasis movie-title --bs-danger-bg-subtle">{{ movie.title }}</h3>
+                            <p class="movie-info ">{{ movie.director }} | {{ movie.year }} | {{ movie.rating }}</p>
                         </a>
                     </div>
-                    <div class="movie-details">
-                        <p class="movie-info">{{ movie.director }} | {{ movie.year }} | {{ movie.rating }}</p>
-                    </div>
-                    <div class="movie-actions">
-                        <button onclick="location.href='/users/{{ user_id }}/update_movie/{{ movie.movie_id }}'">Update Movie</button>
-                        <button onclick="location.href='/users/{{ user_id }}/delete_movie/{{ movie.movie_id }}'">Delete Movie</button>
-                        <button onclick="confirmRedirect('https://movie-web.app/search/movie/{{ movie.title }}')">Watch Movie</button>
-                        <a class="button-link" href="{{ url_for('add_review', user_id=user_id, movie_id=movie.movie_id) }}">Add Review</a>
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group btn-group-sm">
+                            <button onclick="location.href='/users/{{ user_id }}/update_movie/{{ movie.movie_id }}' " class="btn btn-outline-danger mx-1 rounded-pill">Update Movie</button>
+                            <button onclick="location.href='/users/{{ user_id }}/delete_movie/{{ movie.movie_id }}'" class="btn btn-outline-danger mx-1 rounded-pill">Delete Movie</button>
+                            <button onclick="confirmRedirect('https://movie-web.app/search/movie/{{ movie.title }}')" class="btn btn-outline-danger mx-1 rounded-pill">Watch Movie</button>
+                            <a class="btn btn-outline-danger mx-1 rounded-pill text-decoration-none" href="{{ url_for('add_review', user_id=user_id, movie_id=movie.movie_id) }}" >Add Review</a>
+                        </div>
                     </div>
                 </li>
             {% endfor %}
         </ul>
-        <div class="add-movie-button">
-            <button onclick="location.href='/users/{{ user_id }}/add_movie'">Add Movie</button>
-            <button onclick="location.href='{{ url_for('recommend_movie', user_id=user_id) }}'">Recommend Me</button>
+        <div class="container">
+            <button class="btn btn-success" onclick="location.href='/users/{{ user_id }}/add_movie'">Add Movie</button>
+            <button class="btn btn-info" onclick="location.href='{{ url_for('recommend_movie', user_id=user_id) }}'">Recommend Me</button>
         </div>
     </div>
 
@@ -47,5 +41,4 @@
             }
         }
     </script>
-</body>
-</html>
+{% endblock %}
