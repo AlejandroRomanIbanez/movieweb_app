@@ -3,8 +3,6 @@
 {% block title %}Recommend Movie - MovieWeb App{% endblock %}
 
 {% block content %}
-
-{% endblock %}
     <div class="container">
         <div class="movie-details">
             <div class="movie-poster">
@@ -16,13 +14,14 @@
                 <p class="movie-subinfo"><strong>Year:</strong> {{ movie['Year'] }}</p>
                 <p class="movie-subinfo"><strong>Rating:</strong> {{ movie['imdbRating'] }}</p>
                 <p class="movie-description">{{ movie.get('Plot', '') }}</p>
-                <div class="movie-actions">
-                    <button onclick="location.href='/users/{{ user.user_id }}/recommend_movie'">Recommend Another Movie</button>
-                </div>
+                <form action="{{ url_for('add_movies', user_id=user.user_id) }}" method="post">
+                    <input type="hidden" name="name" value="{{ movie['Title'] }}">
+                    <button class="btn btn-success mb-2" type="submit">Add Movie</button>
+                    <div class="movie-actions">
+                        <a class="btn btn-primary text-decoration-none" href="/users/{{ user.user_id }}/recommend_movie">Recommend Another Movie</a>
+                    </div>
+                </form>
             </div>
-        </div>
-        <div class="return-home-button">
-            <a href="{{ url_for('user_movies', user_id=user.user_id) }}">Back to Your Movies</a>
         </div>
     </div>
 {% endblock %}

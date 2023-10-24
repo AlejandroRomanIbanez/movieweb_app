@@ -94,7 +94,6 @@ def user_profile(user_id):
                 new_password = request.form.get('new_password')
                 profile_picture = request.files['profile_picture']
                 if profile_picture:
-                    # Save the file to a directory
                     filename = secure_filename(profile_picture.filename)
                     file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static\images', filename)
                     print(file_path)
@@ -126,7 +125,6 @@ def login():
         flask.Response: The rendered template based on the login result.
     """
     if current_user.is_authenticated:
-        # User is already logged in, handle as needed
         return redirect(url_for('user_movies', user_id=current_user.user_id))
     username = request.form.get('username')
     password = request.form.get('password')
@@ -184,7 +182,6 @@ def user_authorization(user_id):
         else:
             flash('Invalid password', 'error')
 
-    # If the request method is GET or the password is invalid, or any other error occurs.
     return render_template('users.html', users=data_manager.get_all_users_names())
 
 
@@ -213,7 +210,7 @@ def add_user():
         username = request.form.get('username')
         password = request.form.get('password')
         data_manager.register_user(username, password)
-        return redirect(url_for('list_users'))
+        return redirect(url_for('home'))
     return render_template('add_user.html')
 
 
@@ -221,19 +218,17 @@ def add_user():
 @login_required
 def recommend_movie(user_id):
     user = data_manager.find_user_by_id(user_id)
-    try:
-        if user:
-            recommended_movie = data_manager.recommend_popular_movie()
-            movie = data_manager.get_movie_info(recommended_movie)
-            if movie:
-                return render_template('recommended_movie.html', user=user, movie=movie)
-            else:
-                flash('No popular movies found for recommendation.', 'info')
-                return redirect(url_for('user_movies', user_id=user_id))
+    if user:
+        recommended_movie = data_manager.recommend_popular_movie()
+        print(recommended_movie)
+        movie = data_manager.get_movie_info(recommended_movie)
+        if movie is not None:
+            return render_template('recommended_movie.html', user=user, movie=movie)
         else:
-            return render_template('404.html', error='User not found'), 404
-    except TypeError as e:
-        return f"Error {e}"
+            flash('No popular movies found for recommendation.', 'info')
+            return redirect(url_for('user_movies', user_id=user_id))
+    else:
+        return render_template('404.html', error='User not found'), 404
 
 
 @app.route('/users/<int:user_id>/add_movie', methods=['GET', 'POST'])
@@ -247,6 +242,7 @@ def add_movies(user_id):
     if current_user.is_authenticated and current_user.user_id == user_id:
         if request.method == 'POST':
             name = request.form.get('name')
+            print(name)
             data_manager.add_user_movie(user_id, name)
             flash('Movie added successfully!', 'success')
             return redirect(url_for('user_movies', user_id=user_id)), 301
@@ -299,11 +295,7 @@ def delete_movie(user_id, movie_id):
 @app.route('/users/<int:user_id>/delete_review/<review_id>', methods=['GET', 'POST'])
 @login_required
 def delete_review(user_id, review_id):
-    print(f"Delete Review: user_id={user_id}, review_id={review_id}")
-
-    # Check if the user is authorized to delete this review
     review = data_manager.get_review_by_id(review_id)
-    print("User is authenticated:", current_user.is_authenticated)
     if review:
         print(f"Review user_id={review.user.user_id}")
     print(type(current_user.user_id))

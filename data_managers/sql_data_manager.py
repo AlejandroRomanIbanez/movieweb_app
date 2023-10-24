@@ -10,7 +10,7 @@ import re
 class SQLiteDataManager(DataManagerInterface):
     def __init__(self, database_path):
         self.db = db
-        self.api_key = "Your API here"
+        self.api_key = "API KEY HERE"
         self.request_url = "http://www.omdbapi.com/?apikey={}&t=".format(self.api_key)
 
     def update_user_profile(self, user_id, new_name, new_password, profile_picture=None):
@@ -28,14 +28,17 @@ class SQLiteDataManager(DataManagerInterface):
         url = "https://google-bard1.p.rapidapi.com/"
         headers = {
             "text": "Most 10 popular movies of this week?Just write the titles like this: 1.Batman, 2.Scream (until 10)",
-            "X-RapidAPI-Key": "f726431416msha6f0de09bfdd521p189888jsna09e839b1fd1",
-            "X-RapidAPI-Host": "google-bard1.p.rapidapi.com",
-            "psid": "Your PSID here"
+            "lang": "en",
+            "psid": "PSID-1 HERE",
+            "X-RapidAPI-Key": "API KEY HERE",
+            "X-RapidAPI-Host": "google-bard1.p.rapidapi.com"
         }
         response = requests.get(url, headers=headers)
+        print(response.text)
         if response.status_code == 200:
             try:
                 response_data = response.json()
+                print(response_data)
                 popular_movies = re.findall(r'\d+\.\s+(.+)', response_data['response'])
                 print(popular_movies)
                 if popular_movies:
@@ -56,6 +59,25 @@ class SQLiteDataManager(DataManagerInterface):
             return random_movie
         else:
             return None
+
+    def get_movie_info(self, movie_name):
+        """
+        Retrieves movie information from the OMDb API based on the movie name.
+        Args:
+            movie_name (str): The name of the movie.
+        Returns:
+            dict or None: The movie information as a dictionary if found, None otherwise.
+        """
+        if movie_name:
+            response = requests.get(self.request_url + movie_name)
+            if response.status_code == 200:
+                movie_info = response.json()
+                if movie_info['Response'] == 'False':
+                    return None
+                return movie_info
+            else:
+                print("Error occurred while retrieving movie information.")
+                return None
 
     def delete_review(self, user_id, review_id):
         user = self.db.session.query(User).get(user_id)
@@ -87,7 +109,6 @@ class SQLiteDataManager(DataManagerInterface):
             self.db.session.commit()
         else:
             print("User or Movie not found.")
-
 
     def register_user(self, username, password):
         """
@@ -132,7 +153,6 @@ class SQLiteDataManager(DataManagerInterface):
         user = self.db.session.query(User).get(user_id)
         return user
 
-
     def get_all_users_id(self):
         """
         Returns a list of all user IDs.
@@ -141,24 +161,6 @@ class SQLiteDataManager(DataManagerInterface):
         """
         users = self.db.session.query(User).all()
         return [int(user.user_id) for user in users]
-
-    def get_movie_info(self, movie_name):
-        """
-        Retrieves movie information from the OMDb API based on the movie name.
-        Args:
-            movie_name (str): The name of the movie.
-        Returns:
-            dict or None: The movie information as a dictionary if found, None otherwise.
-        """
-        response = requests.get(self.request_url + movie_name)
-        if response.status_code == 200:
-            movie_info = response.json()
-            if movie_info['Response'] == 'False':
-                return None
-            return movie_info
-        else:
-            print("Error occurred while retrieving movie information.")
-            return None
 
     def get_all_users_names(self):
         users = self.db.session.query(User).all()
@@ -197,7 +199,6 @@ class SQLiteDataManager(DataManagerInterface):
                 else:
                     imdb_rating = "N/A"
 
-                # If IMDb rating is "N/A" and an alternative rating source is available, try to use it
                 if imdb_rating == "N/A":
                     for rating_entry in alternative_rating:
                         if 'Internet Movie Database' in rating_entry.get('Source', ''):
@@ -205,7 +206,7 @@ class SQLiteDataManager(DataManagerInterface):
                             if alternative_imdb_rating:
                                 try:
                                     imdb_rating = float(alternative_imdb_rating)
-                                    break  # Stop searching for alternative ratings if one is found
+                                    break
                                 except Exception as e:
                                     print("Error: {e}")
                     else:
@@ -230,7 +231,6 @@ class SQLiteDataManager(DataManagerInterface):
 
     def get_review_by_id(self, review_id):
         return self.db.session.query(Review).get(review_id)
-
 
     def get_movie_by_id(self, user_id, movie_id):
         """

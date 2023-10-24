@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     movies = db.relationship('Movie', secondary=user_movie_association, back_populates='users')
-    profile_picture = db.Column(db.String, nullable=True, default='images/default_profile.jpg')
+    profile_picture = db.Column(db.String, nullable=True, default='default_profile.jpg')
 
     def __repr__(self):
         return f"<User id={self.user_id}, name='{self.name}', password={self.password}>"
@@ -75,8 +75,6 @@ class UserView(ModelView):
     column_filters = ['name']
     column_searchable_list = ['name']
 
-
-
 def print_all_data():
     all_users = User.query.all()
     all_movies = Movie.query.all()
@@ -84,7 +82,7 @@ def print_all_data():
 
     print("All Users:")
     for user in all_users:
-        print(f"{user.user_id} --> {user.name} --> {user.password} --> {user.movies}")
+        print(f"{user.user_id} --> {user.name} --> {user.password} --> {user.movies} --> {user.profile_picture}")
 
     print("\nAll Movies:")
     for movie in all_movies:

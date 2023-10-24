@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="page-title">Add Review</h1>
+        <h1>Add Review</h1>
         <form class="form" action="{{ url_for('add_review', user_id=user_id, movie_id=movie_id) }}" method="POST">
             <div class="form-floating mb-3 col-8">
                 <textarea name="review_text" class="form-control form-control-lg" id="review_text" style="height: 200px;" required></textarea>

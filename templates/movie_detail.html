@@ -4,12 +4,9 @@
 
 {% block content %}
     <div class="container">
-        <div>
-            <a class="btn btn-warning text-decoration-none" href="{{ url_for('user_movies', user_id=user.user_id )}}">My Movies</a>
-        </div>
         <div class="movie-details">
             <div class="movie-poster">
-                <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster">
+                <img class="rounded" src="{{ movie.poster }}" alt="{{ movie.title }} Poster">
             </div>
             <div class="movie-info">
                 <h1>{{ movie.title }}</h1>
@@ -27,13 +24,13 @@
                 {% if reviews %}
                     {% for review in reviews %}
                         <div class="review">
-                            <img class="bd-placeholder-img img-thumbnail rounded-circle" width="50" height="50" src="{{ url_for('static', filename='images/' ~ user.profile_picture) }}" alt="Profile Picture">
-                            <p class="review-user"><strong>{{ all_users[review.user_id - 1] }}</strong> rated this movie:</p>
+                            <img class="bd-placeholder-img img-thumbnail rounded-circle" style="width: 50px; height: 50px; object-fit: cover;" src="{{ url_for('static', filename='images/' ~ review.user.profile_picture) }}" alt="Profile Picture">
+                            <p class="review-user"><strong>{{ review.user.name }}</strong> rated this movie:</p>
                             <p class="review-rating">{{ review.user_rating }}/10</p>
                             <p class="review-text">{{ review.review_text }}</p>
                             {% if user.user_id == review.user_id %}
                                 <form method="POST" action="{{ url_for('delete_review', user_id=user.user_id, review_id=review.review_id) }}">
-                                    <input type="submit" value="Delete" class="movie-actions button">
+                                    <input type="submit" value="Delete" class="btn btn-danger mb-3">
                                 </form>
                             {% endif %}
                         </div>

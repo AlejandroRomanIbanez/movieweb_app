@@ -4,8 +4,29 @@
 
 {% block content %}
     <div class="container">
-        <h1>User Movies</h1>
-        <p><a href="{{ url_for('user_profile', user_id=user_id) }}" class="btn btn-info text-decoration-none">Go to My Profile</a></p>
+        <h1>{{ current_user.name }}'s Movies</h1>
+        <div class="row justify-content-center mb-4 ">
+            <div class="col-md-6">
+                <div class="card bg-solid-white bg-transparent border border-0">
+                    <div class="card-body text-center">
+                        <a href="/users/{{ user_id }}/add_movie"
+                           class="btn btn-danger btn-lg btn-block fw-bold text-decoration-none text-dark text-bold">
+                            Add Movie
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-solid-white bg-transparent border border-0">
+                    <div class="card-body text-center">
+                        <a href="{{ url_for('recommend_movie', user_id=user_id) }}"
+                           class="btn btn-primary btn-lg btn-block fw-bold text-decoration-none text-dark">
+                            Recommend Me
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <ul class="movie-grid">
             {% for movie in movies %}
                 <li class="movie-item">
@@ -27,10 +48,6 @@
                 </li>
             {% endfor %}
         </ul>
-        <div class="container">
-            <button class="btn btn-success" onclick="location.href='/users/{{ user_id }}/add_movie'">Add Movie</button>
-            <button class="btn btn-info" onclick="location.href='{{ url_for('recommend_movie', user_id=user_id) }}'">Recommend Me</button>
-        </div>
     </div>
 
     <script>
