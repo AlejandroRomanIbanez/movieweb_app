@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.utils import secure_filename
 from movieweb_app.data_models import data_models
-from movieweb_app.data_models.data_models import db, User, Movie, Review, UserView, MovieView, ReviewView
+from movieweb_app.data_models.data_models import db, User, Movie, Review, MovieView, ReviewView, UserView, \
+    MyAdminIndexView
 from movieweb_app.data_managers.sql_data_manager import SQLiteDataManager
 from movieweb_app.blueprints.api_routes import api
 from flask_migrate import Migrate
@@ -11,8 +12,7 @@ from flask_admin import Admin
 import os
 import secrets
 
-
-# The Api is not put in sql_data_manager
+# The Api is not put in sql_data_manager, you need to put your API_KEY there to this website work
 app = Flask(__name__)
 app.register_blueprint(api, url_prefix='/api')
 app.secret_key = secrets.token_hex(16)
@@ -20,14 +20,13 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 database_path = os.path.join(app.root_path, 'data', 'data.sqlite')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
-admin = Admin(app)
+admin = Admin(app, index_view=MyAdminIndexView(), template_mode='bootstrap4')
 db.init_app(app)
 migrate = Migrate(app, db)
 admin.add_view(UserView(User, db.session))
 admin.add_view(MovieView(Movie, db.session))
 admin.add_view(ReviewView(Review, db.session))
 data_manager = SQLiteDataManager(app)
-
 
 
 @app.errorhandler(400)
@@ -86,7 +85,6 @@ def load_user(user_id):
 def user_profile(user_id):
     if current_user.is_authenticated and current_user.user_id == user_id:
         user = data_manager.find_user_by_id(user_id)
-
         if request.method == 'POST':
             action = request.form.get('action')
             if action == 'update':
@@ -95,15 +93,15 @@ def user_profile(user_id):
                 profile_picture = request.files['profile_picture']
                 if profile_picture:
                     filename = secure_filename(profile_picture.filename)
-                    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static\images', filename)
+                    file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static/images', filename)
                     print(file_path)
                     profile_picture.save(file_path)
                     data_manager.update_user_profile(user_id, new_name, new_password, filename)
                     print(user.profile_picture)
-                    flash('Profile picture updated successfully!', 'success')
+                    flash('User profile updated successfully!', 'Updated')
                 else:
                     data_manager.update_user_profile(user_id, new_name, new_password)
-                    flash('User profile updated successfully!', 'success')
+                    flash('User profile updated successfully!', 'Updated')
             elif action == 'delete':
                 db.session.delete(user)
                 db.session.commit()
@@ -362,4 +360,3 @@ if __name__ == '__main__':
         # db.create_all()
         data_models.print_all_data()
     app.run(debug=True)
-

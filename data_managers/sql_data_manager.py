@@ -10,7 +10,7 @@ import re
 class SQLiteDataManager(DataManagerInterface):
     def __init__(self, database_path):
         self.db = db
-        self.api_key = "API KEY HERE"
+        self.api_key = "API_HERE"
         self.request_url = "http://www.omdbapi.com/?apikey={}&t=".format(self.api_key)
 
     def update_user_profile(self, user_id, new_name, new_password, profile_picture=None):
@@ -29,8 +29,8 @@ class SQLiteDataManager(DataManagerInterface):
         headers = {
             "text": "Most 10 popular movies of this week?Just write the titles like this: 1.Batman, 2.Scream (until 10)",
             "lang": "en",
-            "psid": "PSID-1 HERE",
-            "X-RapidAPI-Key": "API KEY HERE",
+            "psid": "API_HERE",
+            "X-RapidAPI-Key": "API_HERE",
             "X-RapidAPI-Host": "google-bard1.p.rapidapi.com"
         }
         response = requests.get(url, headers=headers)

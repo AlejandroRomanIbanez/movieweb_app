@@ -20,25 +20,32 @@
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('user_profile', user_id=current_user.user_id) }}"
                     class="sidebar-link text-decoration-none">
-                    {% else %}
-                    <a class="sidebar-link text-decoration-none" id="liveToastBtn">
-                        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                            <div id="liveToast" class="toast bg-solid-white opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="toast-header">
-                                    <strong class="me-auto">You are not Log In</strong>
-                                    <button type="button" class="btn-close" data-bs-dismiss="toast"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="toast-body">
-                                    You need to Log In, if you do not have a Profile, Register to our website.
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %} <i class="fa-solid fa-list pe-2"></i>
+                        <i class="fa-solid fa-list pe-2"></i>
                             <img src="{{ url_for('static', filename='icons/user_icon.png') }}" width="40" height="40"
                                  alt="User Icon" class="me-2">
                             Profile
                     </a>
+                    {% endif %}
+                    <div id="flash-messages">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                                    {% for category, message in messages %}
+                                        <div id="liveToast" class="toast bg-solid-white opacity-75" role="alert" aria-live="assertive" aria-atomic="true">
+                                            <div class="toast-header">
+                                                <strong class="me-auto">{{ category }}</strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="toast-body">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
                     </a>
                 </li>
                 {% if current_user.is_authenticated %}
@@ -68,6 +75,7 @@
                     </ul>
                 </li>
                 {% endif %}
+                {% if current_user.is_authenticated and current_user.is_admin %}
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link collapsed text-decoration-none" data-bs-toggle="collapse"
                        data-bs-target="#dashboard"
@@ -86,10 +94,15 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a href="#" class="sidebar-link text-decoration-none">Dashboard</a>
+                            <a href="/admin/" class="sidebar-link text-decoration-none">
+                                <img src="{{ url_for('static', filename='icons/dashboard.png') }}" width="40" height="40"
+                                 alt="User Icon" class="me-2">
+                                Dashboard
+                            </a>
                         </li>
                     </ul>
                 </li>
+                {% endif %}
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link collapsed text-decoration-none" data-bs-toggle="collapse"
                        data-bs-target="#auth"
@@ -103,7 +116,7 @@
                         data-bs-parent="#sidebar">
                         {% if not current_user.is_authenticated %}
                         <li class="sidebar-item">
-                            <a href="/login" class="sidebar-link text-decoration-none">
+                            <a href="/" class="sidebar-link text-decoration-none">
                                 <img src="{{ url_for('static', filename='icons/login.png') }}" width="40" height="40"
                                  alt="User Icon" class="me-2">
                                 Login
@@ -173,14 +186,14 @@
         toggler.addEventListener("click",function(){
         document.querySelector("#sidebar").classList.toggle("collapsed");
     });
-    const toastTrigger = document.getElementById('liveToastBtn')
-    const toastLiveExample = document.getElementById('liveToast')
+    const toastContainer = document.getElementById('flash-messages');
 
-    if (toastTrigger) {
-      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-      toastTrigger.addEventListener('click', () => {
-        toastBootstrap.show();
-      })
+    if (toastContainer) {
+        const toastElements = toastContainer.querySelectorAll('.toast');
+        toastElements.forEach((toastElement) => {
+            const toastInstance = new bootstrap.Toast(toastElement);
+            toastInstance.show();
+        });
     }
 
     </script>
